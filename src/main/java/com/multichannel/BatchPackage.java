@@ -23,9 +23,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class BatchPackage {
 
-    private static LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<String> queue;
 
     private List<Future<String>> taskResult;
+
+    public BatchPackage(int capacity) {
+        queue = new LinkedBlockingQueue<>(capacity);
+        taskResult = new ArrayList<>(capacity);
+    }
 
     public void offerChannel(String channel) {
         queue.offer(channel);
@@ -43,7 +48,6 @@ public class BatchPackage {
         if (!targetDirectory.exists()) {
             targetDirectory.mkdirs();
         }
-        taskResult = new ArrayList<>();
         try {
             String channel;
             while (true) {
@@ -92,6 +96,9 @@ public class BatchPackage {
         }
     }
 
+    /**
+     * 单个apk包异步处理
+     */
     class ApkChannel implements Callable<String> {
         private String masterFile;
         private String targetDirectory;
