@@ -13,15 +13,15 @@ public class FilePack {
         String targetDir = "D:/workspace/python/target/";
         // 拼接渠道识别字符串：META-INF/uuchannel_{channel}。（channel：为读取配置的渠道号）
         String channelFileName = "META-INF/uuchannel_";
-        String formatChannel = "test%dchannel";
-        int left = 1, right = 8;
-        BatchPackage bpk = new BatchPackage();
+        String formatChannel = "test%03dchannel";
+        int left = 1, right = 10;
+        int count = right - left + 1;
+        BatchPackage bpk = new BatchPackage(count);
         for (int i = left; i <= right; i++) {
             String channel = String.format(formatChannel, i);
             bpk.offerChannel(channel);
         }
         bpk.start(sourceApk, targetDir, channelFileName);
-        int count = right - left + 1;
         while (true) {
             System.out.println("现在完成打包文件数： [" + bpk.getTaskResult().size() + "]/" + count);
             if (bpk.getTaskResult().size() == count) {
